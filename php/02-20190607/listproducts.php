@@ -24,7 +24,7 @@
  		$total = 0;
  		for ($i = 0; $i < count($products) ; $i++) {
  			//tang thue 
- 			$lastPrice = addTax($products,$i, 100);
+ 			$lastPrice = addTax($products,$i, 500);
  			echo "<tr>
 				<td>".( $i + 1 )."</td>
 				<td>".$products[$i][0]."</td>
@@ -36,7 +36,8 @@
  			"<td>Total</td>
  			<td></td>
 			<td>".$total."</td>";
- //function tang thue 10% cac san phan > 500$
+ //function tang thue 10% cac san phan > 500$ và 5% với các sản phẩm dưới 500
+			//value là số mốc muốn tăng giảm
 function addTax($products, $i, $value){
 		if ($products[$i][1] > $value) {
 			return $products[$i][1] + $products[$i][1] *10/100;
