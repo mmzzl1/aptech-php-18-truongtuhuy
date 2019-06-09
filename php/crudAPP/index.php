@@ -38,23 +38,31 @@
 	<hr>
 	<button type="button" class="btn btn-outline-primary btn-sm btn-block" onclick="window.location.href='addProduct.php'">Create</button>
 	<?php
-	function connectDB()
-	{
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		try {
-			$conn = new PDO("mysql:host=$servername", $username, $password);
-// set the PDO error mode to exception
-			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			echo "Connected successfully";    	
-		}
-		catch(PDOException $e)
-		{
-			echo "Connection failed: " . $e->getMessage();
+	//show all product in db
+	$servername = "localhost";
+	$username = "root";
+	$password = "";
+	$dbname = "myDB";
+	try {
+		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+		$stmt = $conn->prepare("SELECT * FROM products");
+		$stmt->execute(); 
+		$data = $stmt->fetchAll();
+		var_dump($data);
+		foreach ($data as $row) {
+			echo $row['name']."<br />\n";
 		}
 	}
-		?>
+	catch(PDOException $e)
+	{
+		echo "Connection failed: " . $e->getMessage();
+	}
 
-	</body>
-	</html>
+	function connectDB()
+	{
+		
+	}
+	?>
+
+</body>
+</html>

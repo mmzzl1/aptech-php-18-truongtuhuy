@@ -1,3 +1,6 @@
+<?php
+ session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,40 +26,54 @@
 			<label for="pwd">Num</label>
 			<input type="text" class="form-control" name="num">
 		</div>
-		<button type="submit" class="btn btn-primary" onclick="addProduct()">Submit</button>
+		<button type="submit" class="btn btn-primary" name="addProduct">Submit</button>
+		<button type="submit" class="btn btn-primary" name="backHome"><--Way Back Home </button>
 	</form>
 	<?php
-function addProduct()
-{
-	$name = $_POST['name'];
-	$detail = $_POST['detail'];
-	$price = $_POST['price'];
-	$num = $_POST['num'];
+		if (isset($_SESSION['products'])) {
+			session_destroy();
+			$messErr = "Thêm thành công sản phẩm"; ?>
+		<div class="alert alert-success" role="alert">
+ 	 		<?php echo $messErr; ?>
+		</div>
+<?php
 
-//add to db
-	$servername = "localhost";
-	$username = "root";
-	$password = "";
-	$dbname = "myDB";
-//check connection
-	try {
-		$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    // set the PDO error mode to exception
-		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//sql command
-		$sql = "INSERT INTO products (name, detail, price, num)
-		VALUES ($name, $detail, $price, $num)";
-
-		$conn->exec($sql);
-		echo "đã add thành công sản phẩm";
 	}
-catch(PDOException $e)
-{
-	echo $sql . "<br>" . $e->getMessage();
-}
-$conn = null;
-}
+	if(isset($_POST['addProduct'])){
+		$_SESSION['products'] = 1;
+		$name = $_POST['name'];
+		$detail = $_POST['detail'];
+		$price = $_POST['price'];
+		$num = $_POST['num'];
+// //add to db
+		$servername = "localhost";
+		$username = "root";
+		$password = "";
+		$dbname = "myDB";
+		try {
+			$conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      	// set the PDO error mode to exception
+			$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+ 		//sql command
+			$sql = "INSERT INTO products (name, detail, price, num)
+			VALUES ('$name', '$detail', '$price', '$num')";
+			$conn->exec($sql);
+			$location = "/aptech-php-18-truongtuhuy/php/crudAPP/addProduct.php";
+			header("Location: " . "http://" . $_SERVER['HTTP_HOST'] . $location);
+		}
+		catch(PDOException $e)
+		{
+			echo $sql . "<br>" . $e->getMessage();
+			$conn = null;
+			die();
+		}
+	}
 
-?>
+	if(isset($_POST['backHome'])){
+		echo 'da bam back';
+		$location = "/aptech-php-18-truongtuhuy/php/crudAPP/";
+		header("Location: " . "http://" . $_SERVER['HTTP_HOST'] . $location);
+	}
+	?>
 </body>
 </html>
